@@ -11,6 +11,10 @@ class ShoppingCartBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<CartController>(
       builder: (context, cart, child) {
+        if (cart.totalItems == 0) {
+          return child ?? const SizedBox();
+        }
+
         return Badge(
           position: BadgePosition.topStart(top: 0, start: -5),
           animationDuration: const Duration(milliseconds: 100),

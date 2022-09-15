@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t_chain_payment_example/src/cart/cart_controller.dart';
+import 'package:t_chain_payment_example/src/checkout/checkout_view.dart';
 import 'package:t_chain_payment_example/src/widgets/bottom_bar.dart';
 import 'package:t_chain_payment_example/src/widgets/cart_stepper.dart';
 
@@ -98,8 +99,12 @@ class CartView extends StatelessWidget {
                 Expanded(
                   flex: 6,
                   child: ElevatedButton(
-                    onPressed: cart.items.isEmpty ? null : () => cart.order(),
-                    child: const Text('ORDER'),
+                    onPressed: cart.items.isEmpty
+                        ? null
+                        : () => Navigator.of(context).restorablePushNamed(
+                              CheckoutView.routeName,
+                            ),
+                    child: const Text('CONFIRM ORDER'),
                   ),
                 )
               ],

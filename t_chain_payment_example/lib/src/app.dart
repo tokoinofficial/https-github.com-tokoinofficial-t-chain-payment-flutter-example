@@ -4,6 +4,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:provider/provider.dart';
 import 'package:t_chain_payment_example/src/cart/cart_controller.dart';
 import 'package:t_chain_payment_example/src/cart/cart_view.dart';
+import 'package:t_chain_payment_example/src/checkout/checkout_view.dart';
+import 'package:t_chain_payment_example/src/payment/payment_controller.dart';
+import 'package:t_chain_payment_example/src/payment/payment_view.dart';
 import 'package:t_chain_payment_example/src/products/products_controller.dart';
 import 'package:t_chain_payment_example/src/products/products_service.dart';
 import 'package:t_chain_payment_example/src/products/product_details_view.dart';
@@ -21,6 +24,7 @@ class MyApp extends StatelessWidget {
               ProductsController(ProductsService())..loadData(),
         ),
         ChangeNotifierProvider(create: (context) => CartController()),
+        ChangeNotifierProvider(create: (context) => PaymentController()),
       ],
       child: MaterialApp(
         restorationScopeId: 'app',
@@ -38,23 +42,37 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(),
         darkTheme: ThemeData.dark(),
         onGenerateRoute: (RouteSettings routeSettings) {
+          Widget screen;
+          switch (routeSettings.name) {
+            case PaymentView.routeName:
+              screen = const PaymentView();
+              return MaterialPageRoute<void>(
+                settings: routeSettings,
+                fullscreenDialog: true,
+                builder: (context) => screen,
+              );
+
+            case CheckoutView.routeName:
+              screen = const CheckoutView();
+              break;
+            case CartView.routeName:
+              screen = const CartView();
+              break;
+            case ProductDetailsView.routeName:
+              final productID = routeSettings.arguments as String?;
+              if (productID == null) {
+                throw Exception('product id is missing');
+              }
+              screen = ProductDetailsView(productID: productID);
+              break;
+            case ProductListView.routeName:
+            default:
+              screen = const ProductListView();
+          }
+
           return MaterialPageRoute<void>(
             settings: routeSettings,
-            builder: (BuildContext context) {
-              switch (routeSettings.name) {
-                case CartView.routeName:
-                  return const CartView();
-                case ProductDetailsView.routeName:
-                  final productID = routeSettings.arguments as String?;
-                  if (productID == null) {
-                    throw Exception('product id is missing');
-                  }
-                  return ProductDetailsView(productID: productID);
-                case ProductListView.routeName:
-                default:
-                  return const ProductListView();
-              }
-            },
+            builder: (context) => screen,
           );
         },
       ),
