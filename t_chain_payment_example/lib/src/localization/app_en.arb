@@ -1,0 +1,6 @@
+{
+  "appTitle": "t_chain_payment_example",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
