@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import 'package:t_chain_payment_example/src/widgets/shopping_cart_badge.dart';
 import 'package:t_chain_payment_example/src/products/products_controller.dart';
+import 'package:t_chain_payment_example/utils/formatter.dart';
 
 import 'product_details_view.dart';
 
@@ -30,7 +31,7 @@ class ProductListView extends StatelessWidget {
 
               return ListTile(
                   title: Text(item.name),
-                  subtitle: Text('\$${item.price}'),
+                  subtitle: Text(Formatter.format(money: item.price)),
                   leading: CircleAvatar(
                     foregroundImage: AssetImage(item.image),
                   ),

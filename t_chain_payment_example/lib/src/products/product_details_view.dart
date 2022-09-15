@@ -6,6 +6,7 @@ import 'package:t_chain_payment_example/src/products/product.dart';
 import 'package:t_chain_payment_example/src/products/products_controller.dart';
 import 'package:t_chain_payment_example/src/cart/cart_controller.dart';
 import 'package:t_chain_payment_example/utils/constants.dart';
+import 'package:t_chain_payment_example/utils/formatter.dart';
 
 /// Displays detailed information about a SampleItem.
 class ProductDetailsView extends StatelessWidget {
@@ -66,7 +67,7 @@ class ProductDetailsView extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(
                       horizontal: Constants.hPadding),
-                  child: Text('\$${product.price}'),
+                  child: Text(Formatter.format(money: product.price)),
                 ),
               ],
             ),

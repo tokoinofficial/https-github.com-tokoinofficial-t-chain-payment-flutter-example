@@ -7,25 +7,25 @@ class ProductsService {
         id: 'p001',
         name: 'GoGo Bus',
         image: 'assets/images/p001.jpg',
-        price: 0.2,
+        price: 100000,
       ),
       Product(
         id: 'p002',
         name: 'GoGo Firy',
         image: 'assets/images/p002.jpg',
-        price: 0.2,
+        price: 120000,
       ),
       Product(
         id: 'p003',
         name: 'GoGo Justin',
         image: 'assets/images/p003.jpg',
-        price: 0.2,
+        price: 100000,
       ),
       Product(
         id: 'p004',
         name: 'GoGo Amby',
         image: 'assets/images/p004.jpg',
-        price: 0.2,
+        price: 110000,
       ),
     ];
   }

@@ -5,6 +5,7 @@ import 'package:t_chain_payment_example/src/payment/payment_controller.dart';
 import 'package:t_chain_payment_example/src/payment/payment_view.dart';
 import 'package:t_chain_payment_example/src/widgets/bottom_bar.dart';
 import 'package:t_chain_payment_example/utils/constants.dart';
+import 'package:t_chain_payment_example/utils/formatter.dart';
 
 class CheckoutView extends StatelessWidget {
   const CheckoutView({
@@ -55,7 +56,7 @@ class CheckoutView extends StatelessWidget {
             final item = cart.items[index];
             return ListTile(
               title: Text(item.product.name),
-              subtitle: Text('\$${item.product.price}'),
+              subtitle: Text(Formatter.format(money: item.product.price)),
               leading: CircleAvatar(
                 foregroundImage: AssetImage(item.product.image),
               ),
@@ -115,15 +116,18 @@ class CheckoutView extends StatelessWidget {
                     final isSelected =
                         paymentType == paymentController.paymentType;
 
-                    return Card(
-                      color: isSelected ? Colors.blue.shade100 : null,
-                      child: InkWell(
-                        onTap: () =>
-                            paymentController.paymentType = paymentType,
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Center(
-                            child: Text(paymentType.name),
+                    return ConstrainedBox(
+                      constraints: const BoxConstraints(minWidth: 100),
+                      child: Card(
+                        color: isSelected ? Colors.blue.shade100 : null,
+                        child: InkWell(
+                          onTap: () =>
+                              paymentController.paymentType = paymentType,
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Center(
+                              child: Text(paymentType.name),
+                            ),
                           ),
                         ),
                       ),
@@ -146,13 +150,12 @@ class CheckoutView extends StatelessWidget {
             return Row(
               children: [
                 Expanded(
-                  flex: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('Total'),
                       Text(
-                        '\$${cart.totalPrice.toStringAsFixed(2)}',
+                        Formatter.format(money: cart.totalPrice),
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -162,13 +165,18 @@ class CheckoutView extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 6,
                   child: ElevatedButton(
                     onPressed: cart.items.isEmpty
                         ? null
-                        : () {
-                            Navigator.of(context)
-                                .restorablePushNamed(PaymentView.routeName);
+                        : () async {
+                            final navigatorState = Navigator.of(context);
+
+                            final orderID = await cart.createOrder();
+
+                            navigatorState.restorablePushNamed(
+                              PaymentView.routeName,
+                              arguments: orderID,
+                            );
                           },
                     child: const Text('PLACE ORDER'),
                   ),

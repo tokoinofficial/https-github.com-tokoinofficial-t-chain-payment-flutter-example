@@ -1,17 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:t_chain_payment_example/src/cart/cart_controller.dart';
-import 'package:t_chain_payment_example/src/cart/cart_view.dart';
 import 'package:t_chain_payment_example/src/payment/payment_controller.dart';
 import 'package:t_chain_payment_example/src/products/product_list_view.dart';
 import 'package:t_chain_payment_example/src/widgets/bottom_bar.dart';
-import 'package:t_chain_payment_example/src/widgets/cart_stepper.dart';
 import 'package:t_chain_payment_example/utils/constants.dart';
 
 class PaymentView extends StatefulWidget {
-  const PaymentView({Key? key}) : super(key: key);
+  const PaymentView({
+    Key? key,
+    required this.orderID,
+  }) : super(key: key);
 
   static const routeName = '/payment';
+
+  final String orderID;
 
   @override
   State<PaymentView> createState() => _PaymentViewState();
@@ -20,12 +23,14 @@ class PaymentView extends StatefulWidget {
 class _PaymentViewState extends State<PaymentView> {
   bool isSuccess = false;
   late CartController _cartController;
+  late PaymentController _paymentController;
 
   @override
   void initState() {
     super.initState();
 
     _cartController = context.read<CartController>();
+    _paymentController = context.read<PaymentController>();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _onPay();
@@ -34,13 +39,15 @@ class _PaymentViewState extends State<PaymentView> {
 
   _onPay() {
     context.read<PaymentController>().pay(
+          orderID: widget.orderID,
+          amount: _cartController.totalPrice.toInt(),
           onSuccess: () {
             _cartController.removeAll();
             setState(() {
               isSuccess = true;
             });
           },
-          onError: () {},
+          onError: (errorMessage) {},
         );
   }
 
@@ -55,14 +62,27 @@ class _PaymentViewState extends State<PaymentView> {
         title: const Text('Payment'),
       ),
       body: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Amount',
-          ),
-          const SizedBox(height: 32),
-          Text(
-            context.read<CartController>().totalPrice.toString(),
-            style: const TextStyle(fontSize: 24),
+          Padding(
+            padding: const EdgeInsets.all(Constants.hPadding),
+            child: Column(
+              children: [
+                Text('ORDER ID: ${widget.orderID}'),
+                const SizedBox(height: 24),
+                const Text(
+                  'Amount',
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  context.read<CartController>().totalPrice.toString(),
+                  style: const TextStyle(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
           ),
           const Spacer(),
           _buildBottomBar(),
@@ -76,7 +96,7 @@ class _PaymentViewState extends State<PaymentView> {
       child: SafeArea(
         child: ElevatedButton(
           onPressed: _onPay,
-          child: const Text('Continue'),
+          child: Text('Continue with ${_paymentController.paymentType.name}'),
         ),
       ),
     );

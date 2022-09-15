@@ -66,5 +66,11 @@ class CartController with ChangeNotifier {
     notifyListeners();
   }
 
-  order() {}
+  Future<String> createOrder() async {
+    // call API
+    await Future.delayed(const Duration(seconds: 1));
+
+    // return order ID
+    return DateTime.now().microsecondsSinceEpoch.toString();
+  }
 }

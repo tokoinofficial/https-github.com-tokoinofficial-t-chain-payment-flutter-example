@@ -4,6 +4,7 @@ import 'package:t_chain_payment_example/src/cart/cart_controller.dart';
 import 'package:t_chain_payment_example/src/checkout/checkout_view.dart';
 import 'package:t_chain_payment_example/src/widgets/bottom_bar.dart';
 import 'package:t_chain_payment_example/src/widgets/cart_stepper.dart';
+import 'package:t_chain_payment_example/utils/formatter.dart';
 
 class CartView extends StatelessWidget {
   const CartView({
@@ -55,7 +56,7 @@ class CartView extends StatelessWidget {
 
             return ListTile(
               title: Text(item.product.name),
-              subtitle: Text('\$${item.product.price}'),
+              subtitle: Text(Formatter.format(money: item.product.price)),
               leading: CircleAvatar(
                 foregroundImage: AssetImage(item.product.image),
               ),
@@ -81,13 +82,12 @@ class CartView extends StatelessWidget {
             return Row(
               children: [
                 Expanded(
-                  flex: 4,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const Text('Total'),
                       Text(
-                        '\$${cart.totalPrice.toStringAsFixed(2)}',
+                        Formatter.format(money: cart.totalPrice),
                         style: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -97,7 +97,6 @@ class CartView extends StatelessWidget {
                   ),
                 ),
                 Expanded(
-                  flex: 6,
                   child: ElevatedButton(
                     onPressed: cart.items.isEmpty
                         ? null

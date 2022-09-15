@@ -40,12 +40,16 @@ class MyApp extends StatelessWidget {
         onGenerateTitle: (BuildContext context) =>
             AppLocalizations.of(context)!.appTitle,
         theme: ThemeData(),
-        darkTheme: ThemeData.dark(),
         onGenerateRoute: (RouteSettings routeSettings) {
           Widget screen;
           switch (routeSettings.name) {
             case PaymentView.routeName:
-              screen = const PaymentView();
+              final orderID = routeSettings.arguments as String?;
+              if (orderID == null) {
+                throw Exception('order ID is missing');
+              }
+
+              screen = PaymentView(orderID: orderID);
               return MaterialPageRoute<void>(
                 settings: routeSettings,
                 fullscreenDialog: true,
@@ -61,7 +65,7 @@ class MyApp extends StatelessWidget {
             case ProductDetailsView.routeName:
               final productID = routeSettings.arguments as String?;
               if (productID == null) {
-                throw Exception('product id is missing');
+                throw Exception('product ID is missing');
               }
               screen = ProductDetailsView(productID: productID);
               break;
