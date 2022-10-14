@@ -21,7 +21,7 @@ class PaymentView extends StatefulWidget {
 }
 
 class _PaymentViewState extends State<PaymentView> {
-  bool isSuccess = false;
+  String? message;
   late CartController _cartController;
   late PaymentController _paymentController;
 
@@ -44,17 +44,26 @@ class _PaymentViewState extends State<PaymentView> {
           onSuccess: () {
             _cartController.removeAll();
             setState(() {
-              isSuccess = true;
+              message = "Thanks\nfor your order";
             });
           },
-          onError: (errorMessage) {},
+          onCancelled: () {
+            setState(() {
+              message = "Cancelled";
+            });
+          },
+          onError: (errorMessage) {
+            setState(() {
+              message = errorMessage;
+            });
+          },
         );
   }
 
   @override
   Widget build(BuildContext context) {
-    if (isSuccess) {
-      return _buildThanks();
+    if (message != null) {
+      return _buildMessage(message: message);
     }
 
     return Scaffold(
@@ -102,16 +111,16 @@ class _PaymentViewState extends State<PaymentView> {
     );
   }
 
-  Widget _buildThanks() {
+  Widget _buildMessage({required message}) {
     return Scaffold(
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          const Text(
-            'Thanks\nfor your order',
+          Text(
+            message,
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 24),
+            style: const TextStyle(fontSize: 24),
           ),
           const SizedBox(height: 32),
           TextButton(

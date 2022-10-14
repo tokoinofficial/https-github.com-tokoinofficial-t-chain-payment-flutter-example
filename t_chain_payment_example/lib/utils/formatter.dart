@@ -3,8 +3,8 @@ import 'package:currency_formatter/currency_formatter.dart';
 class Formatter {
   static final CurrencyFormatterSettings _vnSettings =
       CurrencyFormatterSettings(
-    symbol: 'VND',
-    symbolSide: SymbolSide.right,
+    symbol: 'IDR',
+    symbolSide: SymbolSide.left,
     thousandSeparator: '.',
     decimalSeparator: ',',
     symbolSeparator: ' ',

@@ -2,7 +2,6 @@ import 'package:flutter/widgets.dart';
 
 import 'package:t_chain_payment_example/src/payment/momo_payment_impl.dart';
 import 'package:t_chain_payment_example/src/payment/t_chain_payment_impl.dart';
-import 'package:t_chain_payment_sdk/t_chain_payment_sdk.dart';
 
 enum PaymentType { cashOnDelivery, momo, tChainPayment }
 
@@ -46,6 +45,7 @@ class PaymentController with ChangeNotifier {
     required int amount,
     required Function() onSuccess,
     required Function(String) onError,
+    required Function() onCancelled,
   }) async {
     switch (_paymentType) {
       case PaymentType.cashOnDelivery:
@@ -55,12 +55,14 @@ class PaymentController with ChangeNotifier {
       case PaymentType.momo:
         _momoPayment.onSuccess = onSuccess;
         _momoPayment.onError = onError;
+        _momoPayment.onCancelled = onCancelled;
         _momoPayment.pay(orderID: orderID, amount: amount);
         return;
 
       case PaymentType.tChainPayment:
         _tChainPayment.onSuccess = onSuccess;
         _tChainPayment.onError = onError;
+        _tChainPayment.onCancelled = onCancelled;
         _tChainPayment.pay(orderID: orderID, amount: amount);
         return;
     }
