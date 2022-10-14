@@ -21,13 +21,13 @@ class MomoPaymentImpl extends PaymentBase {
   }
 
   @override
-  void pay({required String orderID, required int amount}) {
+  void pay({required String orderID, required num amount}) {
     MomoPaymentInfo options = MomoPaymentInfo(
       merchantName: "TTNC&TVKT",
       appScheme: "MOMOUMGQ111111",
       merchantCode: 'MOMOUMGQ111111',
       partnerCode: 'MOMOUMGQ111111',
-      amount: amount,
+      amount: amount.toInt(),
       orderId: orderID,
       orderLabel: orderID,
       merchantNameLabel: "MOMOUMGQ111111",

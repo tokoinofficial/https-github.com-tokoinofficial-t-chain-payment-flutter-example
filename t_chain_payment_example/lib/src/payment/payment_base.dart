@@ -4,5 +4,5 @@ abstract class PaymentBase {
   Function()? onSuccess;
   Function(String)? onError;
 
-  pay({required String orderID, required int amount});
+  pay({required String orderID, required num amount});
 }

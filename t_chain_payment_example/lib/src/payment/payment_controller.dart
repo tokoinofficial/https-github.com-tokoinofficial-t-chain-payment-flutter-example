@@ -1,7 +1,10 @@
 import 'package:flutter/widgets.dart';
-import 'package:t_chain_payment_example/src/payment/momo_payment_impl.dart';
 
-enum PaymentType { cashOnDelivery, momo }
+import 'package:t_chain_payment_example/src/payment/momo_payment_impl.dart';
+import 'package:t_chain_payment_example/src/payment/t_chain_payment_impl.dart';
+import 'package:t_chain_payment_sdk/t_chain_payment_sdk.dart';
+
+enum PaymentType { cashOnDelivery, momo, tChainPayment }
 
 extension PaymentTypeExt on PaymentType {
   String get name {
@@ -10,16 +13,22 @@ extension PaymentTypeExt on PaymentType {
         return 'Cash on Delivery';
       case PaymentType.momo:
         return 'Momo';
+      case PaymentType.tChainPayment:
+        return 'T-Chain Payment';
     }
   }
 }
 
 class PaymentController with ChangeNotifier {
   late MomoPaymentImpl _momoPayment;
+  late TChainPaymentImpl _tChainPayment;
 
   PaymentController() {
     _momoPayment = MomoPaymentImpl();
     _momoPayment.init();
+
+    _tChainPayment = TChainPaymentImpl();
+    _tChainPayment.init();
   }
 
   PaymentType _paymentType = PaymentType.cashOnDelivery;
@@ -38,16 +47,22 @@ class PaymentController with ChangeNotifier {
     required Function() onSuccess,
     required Function(String) onError,
   }) async {
-    if (_paymentType == PaymentType.cashOnDelivery) {
-      onSuccess.call();
-      return;
-    }
+    switch (_paymentType) {
+      case PaymentType.cashOnDelivery:
+        onSuccess.call();
+        return;
 
-    if (_paymentType == PaymentType.momo) {
-      _momoPayment.onSuccess = onSuccess;
-      _momoPayment.onError = onError;
-      _momoPayment.pay(orderID: orderID, amount: amount);
-      return;
+      case PaymentType.momo:
+        _momoPayment.onSuccess = onSuccess;
+        _momoPayment.onError = onError;
+        _momoPayment.pay(orderID: orderID, amount: amount);
+        return;
+
+      case PaymentType.tChainPayment:
+        _tChainPayment.onSuccess = onSuccess;
+        _tChainPayment.onError = onError;
+        _tChainPayment.pay(orderID: orderID, amount: amount);
+        return;
     }
   }
 }

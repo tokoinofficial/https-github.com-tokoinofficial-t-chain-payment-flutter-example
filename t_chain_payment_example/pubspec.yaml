@@ -20,6 +20,8 @@ dependencies:
   flutter_easyloading: ^3.0.5
   currency_formatter: ^2.0.0
   momo_vn: ^2.0.2
+  t_chain_payment_sdk: ^0.0.2
+  forex_conversion: ^0.0.2
 
 dev_dependencies:
   flutter_test:
